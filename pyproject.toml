@@ -1,0 +1,59 @@
+[project]
+name = "podpack-mail"
+version = "0.1.0+dev"
+description = "Outbound mail for podpack sites, installed as an app"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENCE"]
+requires-python = ">=3.12"
+keywords = ["flask", "plugins", "web", "mail", "smtp"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Framework :: Flask",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Communications :: Email",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+dependencies = [
+    "flask>=3.0",
+    "flask-mailman>=1.1.1",
+]
+
+[[project.authors]]
+name = "Steve Holden"
+email = "steve@holdenweb.com"
+
+[build-system]
+requires = ["uv_build>=0.8.4,<0.9.0"]
+build-backend = "uv_build"
+
+# podpack is deliberately absent from `dependencies`: a real dependency's
+# [tool.uv.sources] entry travels with the distribution, so a site whose own
+# podpack source differs could never lock. A dependency group is dev-only
+# metadata and constrains nobody. See writing-an-app.md rule 1.
+[dependency-groups]
+dev = [
+    "podpack",
+    "pytest>=8.0",
+    "mypy>=1.11",
+]
+
+[tool.uv.sources]
+# The published repository, not a path, for the reason podpack-qrcode gives:
+# an editable pointer at a sibling checkout resolves on exactly one machine.
+podpack = { git = "https://github.com/holdenweb/podpack.git" }
+
+[tool.mypy]
+files = ["src", "tests"]
+
+# flask-mailman ships neither stubs nor a py.typed marker, and no types-*
+# package exists for it. Suppressed for that one package rather than globally.
+[[tool.mypy.overrides]]
+module = "flask_mailman.*"
+ignore_missing_imports = true
