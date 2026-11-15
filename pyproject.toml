@@ -1,6 +1,6 @@
 [project]
 name = "podpack-mail"
-version = "0.1.0+dev"
+version = "0.1.0"
 description = "Outbound mail for podpack sites, installed as an app"
 readme = "README.md"
 license = "MIT"
